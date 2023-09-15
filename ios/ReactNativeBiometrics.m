@@ -17,7 +17,7 @@ RCT_EXPORT_METHOD(isSensorAvailable: (NSDictionary *)params resolver:(RCTPromise
   LAContext *context = [[LAContext alloc] init];
   NSError *la_error = nil;
   BOOL allowDeviceCredentials = [RCTConvert BOOL:params[@"allowDeviceCredentials"]];
-  LAPolicy laPolicy = LAPolicyDeviceOwnerAuthenticationWithBiometrics;
+  LAPolicy laPolicy = LAPolicyDeviceOwnerAuthentication;
 
   if (allowDeviceCredentials == TRUE) {
     laPolicy = LAPolicyDeviceOwnerAuthentication;
@@ -49,7 +49,8 @@ RCT_EXPORT_METHOD(createKeys: (NSDictionary *)params resolver:(RCTPromiseResolve
     CFErrorRef error = NULL;
     BOOL allowDeviceCredentials = [RCTConvert BOOL:params[@"allowDeviceCredentials"]];
 
-    SecAccessControlCreateFlags secCreateFlag = kSecAccessControlBiometryAny;
+//    SecAccessControlCreateFlags secCreateFlag = kSecAccessControlBiometryAny;
+    SecAccessControlCreateFlags secCreateFlag = kSecAccessControlUserPresence;
 
     if (allowDeviceCredentials == TRUE) {
       secCreateFlag = kSecAccessControlUserPresence;
@@ -176,7 +177,7 @@ RCT_EXPORT_METHOD(simplePrompt: (NSDictionary *)params resolver:(RCTPromiseResol
     BOOL allowDeviceCredentials = [RCTConvert BOOL:params[@"allowDeviceCredentials"]];
 
     LAContext *context = [[LAContext alloc] init];
-    LAPolicy laPolicy = LAPolicyDeviceOwnerAuthenticationWithBiometrics;
+    LAPolicy laPolicy = LAPolicyDeviceOwnerAuthentication;
 
     if (allowDeviceCredentials == TRUE) {
       laPolicy = LAPolicyDeviceOwnerAuthentication;
@@ -191,7 +192,8 @@ RCT_EXPORT_METHOD(simplePrompt: (NSDictionary *)params resolver:(RCTPromiseResol
           @"success": @(YES)
         };
         resolve(result);
-      } else if (biometricError.code == LAErrorUserCancel) {
+      }
+      else if (biometricError.code == LAErrorUserCancel) {
         NSDictionary *result = @{
           @"success": @(NO),
           @"error": @"User cancellation"
@@ -211,7 +213,7 @@ RCT_EXPORT_METHOD(biometricKeysExist: (RCTPromiseResolveBlock)resolve rejecter:(
 
     if (biometricKeyExists) {
       NSDictionary *result = @{
-        @"keysExist": @(YES)
+        @"keysExist": @(YES),
       };
       resolve(result);
     } else {
