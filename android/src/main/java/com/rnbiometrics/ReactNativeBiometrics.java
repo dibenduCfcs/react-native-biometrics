@@ -192,9 +192,7 @@ public class ReactNativeBiometrics extends ReactContextBaseJavaModule {
 
         if (allowDeviceCredentials == false || isCurrentSDK29OrEarlier()) {
             builder.setNegativeButtonText(cancelButtonText);
-        } else{
-             builder.setSubtitle("Enter DMS PIN");
-        }
+        } 
 
         return builder.build();
     }
